@@ -1,9 +1,10 @@
 import express from "express";
 import http from "http";
 import { WebSocketServer } from "ws";
+import { RedisSubscriptionManager } from "./RedisClient";
 
 const app = express();
-const PORT = 3000;
+const PORT = 4000;
 
 const server = http.createServer(app);
 
@@ -41,7 +42,7 @@ wss.on("connection", async (ws, req) => {
     }
   });
 
-  ws.on("disconnect", () => {
+  ws.on("close", () => {
     RedisSubscriptionManager.getInstance().unsubscribe(
       wsId.toString(),
       users[wsId].room
